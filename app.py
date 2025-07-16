@@ -33,13 +33,13 @@ dark_patterns = {
         r"added\s*at\s*checkout"
     ],
     "Scarcity Pressure": [
-    r"only\s*\d+\s*(left|remaining|available)",
-    r"selling\s*out\s*(fast)?",
-    r"last\s*chance",
-    r"book(ed)?\s*now",
-    r"limited\s*time\s*offer",
-    r"low\s*stock"
-],
+        r"only\s*\d+\s*(left|remaining|available)",
+        r"selling\s*out\s*(fast)?",
+        r"last\s*chance",
+        r"book(ed)?\s*now",
+        r"limited\s*time\s*offer",
+        r"low\s*stock"
+    ],
     "Sneak into Basket": [
         r"pre-checked",
         r"add(ed)?\s+to\s+your\s+order\s+automatically",
@@ -82,17 +82,18 @@ st.markdown("Analyze website or email text for **dark UX patterns** like hidden 
 input_mode = st.radio("Choose input type:", ["Paste Text", "Enter URL"])
 user_input = ""
 
+# Add a session state key for the text input
+if "text_input" not in st.session_state:
+    st.session_state["text_input"] = ""
+
 if input_mode == "Paste Text":
-    # Add a text input with a clear/reset button
-if "text" not in st.session_state:
-    st.session_state["text"] = ""
-
-def clear_text():
-    st.session_state["text"] = ""
-
-st.text_area("Paste the plain text you'd like to analyze below:", height=300, key="text")
-st.button("🧹 Clear Text", on_click=clear_text)
-
+    col1, col2 = st.columns([4, 1])
+    with col1:
+        st.session_state["text_input"] = st.text_area("Paste the plain text you'd like to analyze below:", value=st.session_state["text_input"], height=300)
+    with col2:
+        if st.button("🧹 Clear"):
+            st.session_state["text_input"] = ""
+    user_input = st.session_state["text_input"]
 
 elif input_mode == "Enter URL":
     url = st.text_input("Enter a website URL")
