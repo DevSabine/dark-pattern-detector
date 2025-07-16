@@ -33,10 +33,13 @@ dark_patterns = {
         r"added\s*at\s*checkout"
     ],
     "Scarcity Pressure": [
-        r"only\s+\d+\s+left",
-        r"selling\s*out\s*fast",
-        r"last\s*chance"
-    ],
+    r"only\s*\d+\s*(left|remaining|available)",
+    r"selling\s*out\s*(fast)?",
+    r"last\s*chance",
+    r"book(ed)?\s*now",
+    r"limited\s*time\s*offer",
+    r"low\s*stock"
+],
     "Sneak into Basket": [
         r"pre-checked",
         r"add(ed)?\s+to\s+your\s+order\s+automatically",
