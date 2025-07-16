@@ -6,9 +6,11 @@ from bs4 import BeautifulSoup
 # Function to extract text from a website URL
 def extract_text_from_url(url):
     try:
+        if not url.startswith("http"):
+            url = "https://" + url
         response = requests.get(url, timeout=10)
         soup = BeautifulSoup(response.text, "html.parser")
-        return soup.get_text(separator=" ", strip=True)[:15000]  # Limit to 15,000 chars
+        return soup.get_text(separator=" ", strip=True)[:15000]
     except Exception as e:
         return f"Error fetching URL: {e}"
 
@@ -56,7 +58,7 @@ def detect_dark_patterns(text):
                 results.append(f"🔍 **{category}** pattern found: `{pattern}`")
     return results
 
-# --- Streamlit UI ---
+# Streamlit UI
 st.set_page_config(page_title="Dark Pattern Detector", layout="centered")
 st.title("🕵️‍♀️ Dark Pattern Detector")
 st.markdown("""
@@ -76,20 +78,21 @@ st.markdown("""
 It’s not magic. If a website hides the shady stuff in a popup, image or script — we might not catch it (yet). But we’re getting smarter.
 """)
 
-st.markdown("Analyze website or email text for **dark UX patterns** like hidden opt-outs, forced subscriptions, confirmshaming, etc.")
-
-# Input mode
 input_mode = st.radio("Choose input type:", ["Paste Text", "Enter URL"])
 user_input = ""
 
-# Add a session state key for the text input
+# Session state for pasted text
 if "text_input" not in st.session_state:
     st.session_state["text_input"] = ""
 
 if input_mode == "Paste Text":
     col1, col2 = st.columns([4, 1])
     with col1:
-        st.session_state["text_input"] = st.text_area("Paste the plain text you'd like to analyze below:", value=st.session_state["text_input"], height=300)
+        st.session_state["text_input"] = st.text_area(
+            "Paste the plain text you'd like to analyze below:",
+            value=st.session_state["text_input"],
+            height=300
+        )
     with col2:
         if st.button("🧹 Clear"):
             st.session_state["text_input"] = ""
@@ -100,7 +103,7 @@ elif input_mode == "Enter URL":
     if url:
         with st.spinner("Fetching and extracting text..."):
             user_input = extract_text_from_url(url)
-        st.text_area("Extracted site text (editable):", user_input, height=200)
+        user_input = st.text_area("Extracted site text (editable):", user_input, height=200)
 
 # Run detection
 if st.button("🔎 Analyze"):
@@ -114,4 +117,5 @@ if st.button("🔎 Analyze"):
                 st.markdown(match)
         else:
             st.info("🚫 No obvious dark patterns detected.")
+
 
