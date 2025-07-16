@@ -3,9 +3,7 @@ import re
 import requests
 from bs4 import BeautifulSoup
 
-import streamlit as st
-import re
-
+# Function to extract text from a website URL
 def extract_text_from_url(url):
     try:
         response = requests.get(url, timeout=10)
@@ -14,16 +12,7 @@ def extract_text_from_url(url):
     except Exception as e:
         return f"Error fetching URL: {e}"
 
-
-
-st.set_page_config(page_title="Dark Pattern Detector", layout="centered")
-st.title("🕵️‍♀️ Dark Pattern Detector")
-st.markdown("Analyze website or email text for **dark UX patterns** like hidden opt-outs, forced subscriptions, confirmshaming, etc.")
-
-# Input text
-user_input = st.text_area("Paste the plain text you'd like to analyze below:", height=300)
-
-# Define patterns to look for
+# Dark pattern definitions
 dark_patterns = {
     "Forced Continuity": [
         r"automatically\s*renew",
@@ -55,6 +44,7 @@ dark_patterns = {
     ]
 }
 
+# Detection logic
 def detect_dark_patterns(text):
     results = []
     for category, patterns in dark_patterns.items():
@@ -63,9 +53,29 @@ def detect_dark_patterns(text):
                 results.append(f"🔍 **{category}** pattern found: `{pattern}`")
     return results
 
-if st.button("Analyze"):
-    if user_input.strip() == "":
-        st.warning("Please paste some text to analyze.")
+# --- Streamlit UI ---
+st.set_page_config(page_title="Dark Pattern Detector", layout="centered")
+st.title("🕵️‍♀️ Dark Pattern Detector")
+st.markdown("Analyze website or email text for **dark UX patterns** like hidden opt-outs, forced subscriptions, confirmshaming, etc.")
+
+# Input mode
+input_mode = st.radio("Choose input type:", ["Paste Text", "Enter URL"])
+user_input = ""
+
+if input_mode == "Paste Text":
+    user_input = st.text_area("Paste the plain text you'd like to analyze below:", height=300)
+
+elif input_mode == "Enter URL":
+    url = st.text_input("Enter a website URL")
+    if url:
+        with st.spinner("Fetching and extracting text..."):
+            user_input = extract_text_from_url(url)
+        st.text_area("Extracted site text (editable):", user_input, height=200)
+
+# Run detection
+if st.button("🔎 Analyze"):
+    if not user_input.strip():
+        st.warning("Please enter text or a valid URL to analyze.")
     else:
         findings = detect_dark_patterns(user_input)
         if findings:
