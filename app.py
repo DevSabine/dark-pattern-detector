@@ -1,5 +1,20 @@
 import streamlit as st
 import re
+import requests
+from bs4 import BeautifulSoup
+
+import streamlit as st
+import re
+
+def extract_text_from_url(url):
+    try:
+        response = requests.get(url, timeout=10)
+        soup = BeautifulSoup(response.text, "html.parser")
+        return soup.get_text(separator=" ", strip=True)[:15000]  # Limit to 15,000 chars
+    except Exception as e:
+        return f"Error fetching URL: {e}"
+
+
 
 st.set_page_config(page_title="Dark Pattern Detector", layout="centered")
 st.title("🕵️‍♀️ Dark Pattern Detector")
