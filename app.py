@@ -62,4 +62,4 @@ if st.button("Analyze") and url:
             st.error(f"Failed to fetch page: {response.status_code}")
     except Exception as e:
         st.error(f"Error: {e}")
-Upgraded app.py with real dark pattern detection logic
+
