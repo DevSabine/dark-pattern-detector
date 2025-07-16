@@ -12,8 +12,11 @@ user_input = st.text_area("Paste the plain text you'd like to analyze below:", h
 dark_patterns = {
     "Forced Continuity": [
         r"automatically\s*renew",
-        r"you\s*will\s*be\s*charged\s*after\s*trial",
-        r"cancel\s*anytime\s*but\s*must\s*call"
+        r"free\s+trial.*\$\d+.*month",
+        r"\$\d+\s*/\s*month\s*after\s*trial",
+        r"free\s+for\s+\d+\s+days.*\$\d+.*month",
+        r"charged\s*after\s*trial",
+        r"\$\d+\s*/\s*month\s*.*terms\s*apply"
     ],
     "Confirmshaming": [
         r"no,\s*i\s*don'?t\s*want\s*to\s*save\s*money",
