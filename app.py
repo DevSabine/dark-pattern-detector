@@ -1,29 +1,59 @@
 import streamlit as st
 import re
 
-st.title("Dark Pattern Detector")
-st.write("Paste website text below to check for dark patterns:")
+st.set_page_config(page_title="Dark Pattern Detector", layout="centered")
+st.title("🕵️‍♀️ Dark Pattern Detector")
+st.markdown("Analyze website or email text for **dark UX patterns** like hidden opt-outs, forced subscriptions, confirmshaming, etc.")
 
-user_input = st.text_area("Website text to analyze", height=300)
+# Input text
+user_input = st.text_area("Paste the plain text you'd like to analyze below:", height=300)
 
+# Define patterns to look for
 dark_patterns = {
-    "Confirmshaming": r"(don’t|do not) (miss|leave|skip|go) (out|away).*", 
-    "Hidden Subscription": r"(free trial).*(credit card|auto-renew|charge)",
-    "Trick Questions": r"(double negatives|confusing choices)",
-    "Obstruction": r"(make it hard|difficult to cancel|can’t find cancel)",
-    "Forced Continuity": r"(auto-renew|keep charging|subscription continues)",
-    "Nagging": r"(remind|are you sure|don’t leave yet)",
-    "Bait and Switch": r"(click here).*(different result|not what expected)"
+    "Forced Continuity": [
+        r"automatically\s*renew",
+        r"you\s*will\s*be\s*charged\s*after\s*trial",
+        r"cancel\s*anytime\s*but\s*must\s*call"
+    ],
+    "Confirmshaming": [
+        r"no,\s*i\s*don'?t\s*want\s*to\s*save\s*money",
+        r"i\s*prefer\s*to\s*pay\s*full\s*price",
+        r"i'?m\s*not\s*interested\s*in\s*better\s*health"
+    ],
+    "Hidden Costs": [
+        r"service\s*fee",
+        r"processing\s*fee",
+        r"added\s*at\s*checkout"
+    ],
+    "Scarcity Pressure": [
+        r"only\s+\d+\s+left",
+        r"selling\s*out\s*fast",
+        r"last\s*chance"
+    ],
+    "Sneak into Basket": [
+        r"pre-checked",
+        r"add(ed)?\s+to\s+your\s+order\s+automatically",
+        r"default\s+opt\s+in"
+    ]
 }
 
-found_patterns = []
+def detect_dark_patterns(text):
+    results = []
+    for category, patterns in dark_patterns.items():
+        for pattern in patterns:
+            if re.search(pattern, text, re.IGNORECASE):
+                results.append(f"🔍 **{category}** pattern found: `{pattern}`")
+    return results
 
-if st.button("Analyze Text"):
-    for label, pattern in dark_patterns.items():
-        if re.search(pattern, user_input, re.IGNORECASE):
-            found_patterns.append(label)
-
-    if found_patterns:
-        st.error(f"⚠️ Detected potential dark patterns: {', '.join(found_patterns)}")
+if st.button("Analyze"):
+    if user_input.strip() == "":
+        st.warning("Please paste some text to analyze.")
     else:
-        st.success("✅ No obvious dark patterns detected.")
+        findings = detect_dark_patterns(user_input)
+        if findings:
+            st.success("✅ Potential dark patterns detected:")
+            for match in findings:
+                st.markdown(match)
+        else:
+            st.info("🚫 No obvious dark patterns detected.")
+
