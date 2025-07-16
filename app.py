@@ -83,7 +83,16 @@ input_mode = st.radio("Choose input type:", ["Paste Text", "Enter URL"])
 user_input = ""
 
 if input_mode == "Paste Text":
-    user_input = st.text_area("Paste the plain text you'd like to analyze below:", height=300)
+    # Add a text input with a clear/reset button
+if "text" not in st.session_state:
+    st.session_state["text"] = ""
+
+def clear_text():
+    st.session_state["text"] = ""
+
+st.text_area("Paste the plain text you'd like to analyze below:", height=300, key="text")
+st.button("🧹 Clear Text", on_click=clear_text)
+
 
 elif input_mode == "Enter URL":
     url = st.text_input("Enter a website URL")
