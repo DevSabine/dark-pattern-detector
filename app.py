@@ -59,6 +59,23 @@ def detect_dark_patterns(text):
 # --- Streamlit UI ---
 st.set_page_config(page_title="Dark Pattern Detector", layout="centered")
 st.title("🕵️‍♀️ Dark Pattern Detector")
+st.markdown("""
+> **Tired of websites tricking you into subscriptions, hidden fees, or shady “NO THANKS, I LOVE PAYING MORE” buttons?**  
+> You’re not crazy — that stuff is real and it’s called a **dark pattern**. This app exposes it.
+
+### 💥 How to Use It:
+- 🔍 **Paste some shady text** from a site, email or app — you know, the stuff that makes you go “Wait, what did I just agree to?”
+- 🌐 **Or just drop in a URL** — we’ll try to grab the visible text for you.
+- 🧠 Hit **Analyze** and we’ll sniff out patterns like:
+    - **“Free trial, auto-renews forever”**
+    - **“Only 1 left in stock” panic bait**
+    - **Hidden fees that show up last second**
+    - **Those guilt-trip buttons you hate**
+
+### ⚠️ Heads up:
+It’s not magic. If a website hides the shady stuff in a popup, image or script — we might not catch it (yet). But we’re getting smarter.
+""")
+
 st.markdown("Analyze website or email text for **dark UX patterns** like hidden opt-outs, forced subscriptions, confirmshaming, etc.")
 
 # Input mode
