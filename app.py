@@ -96,7 +96,7 @@ if input_mode == "Paste Text":
     user_input = st.session_state["text_input"]
 
 elif input_mode == "Enter URL":
-    url = st.text_input("Enter a website URL")
+    url = st.text_input("Enter a website URL", placeholder="https://example.com")
     if url:
         with st.spinner("Fetching and extracting text..."):
             user_input = extract_text_from_url(url)
