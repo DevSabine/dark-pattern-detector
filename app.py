@@ -58,11 +58,12 @@ def detect_dark_patterns(text):
                 results.append(f"🔍 **{category}** pattern found: `{pattern}`")
     return results
 
-# Streamlit UI
+# --- Streamlit UI ---
 st.set_page_config(page_title="Dark Pattern Detector", layout="centered")
 st.title("🕵️‍♀️ Dark Pattern Detector")
+
 st.markdown("""
-> **Tired of websites tricking you into subscriptions, hidden fees, or shady “NO THANKS, I LOVE PAYING MORE” buttons?**  
+> **Tired of websites tricking you into subscriptions, hidden fees or shady “NO THANKS, I LOVE PAYING MORE” buttons?**  
 > You’re not crazy — that stuff is real and it’s called a **dark pattern**. This app exposes it.
 
 ### 💥 How to Use It:
@@ -81,7 +82,6 @@ It’s not magic. If a website hides the shady stuff in a popup, image or script
 input_mode = st.radio("Choose input type:", ["Paste Text", "Enter URL"])
 user_input = ""
 
-# Session state for pasted text
 if "text_input" not in st.session_state:
     st.session_state["text_input"] = ""
 
@@ -102,8 +102,8 @@ elif input_mode == "Enter URL":
     url = st.text_input("Enter a website URL", placeholder="https://example.com")
     if url:
         with st.spinner("Fetching and extracting text..."):
-            user_input = extract_text_from_url(url)
-        user_input = st.text_area("Extracted site text (editable):", user_input, height=200)
+            extracted = extract_text_from_url(url)
+        user_input = st.text_area("Extracted site text (editable):", extracted, height=200)
 
 # Run detection
 if st.button("🔎 Analyze"):
@@ -117,5 +117,4 @@ if st.button("🔎 Analyze"):
                 st.markdown(match)
         else:
             st.info("🚫 No obvious dark patterns detected.")
-
 
