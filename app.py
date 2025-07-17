@@ -89,7 +89,7 @@ if "text_input" not in st.session_state:
 if input_mode == "Paste Text":
     col1, col2 = st.columns([4, 1])
     with col1:
-        st.session_state["text_input"] = st.text_area("Paste the plain text you'd like to analyze below:", value=st.session_state["text_input"], height=300)
+        st.session_state["text_input"] = st.text_area("Drop your shady text here: ", value=st.session_state["text_input"], height=300)
     with col2:
         if st.button("🧹 Clear"):
             st.session_state["text_input"] = ""
